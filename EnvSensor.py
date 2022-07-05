@@ -1,33 +1,34 @@
+import json
 import time
 
 
-class EnvSensor:
-    temp = 0
-    humid = 0
-    light = 0
-    last_update = 0
+class EnvSensor(object):
 
-    def update(self, temp, humid, light):
+    def __init__(self):
+        self.__light = None
+        self.__humid = None
+        self.__temp = None
+        self.__update_time = None
+
+    def update(self, data: json):
         """
         更新环境传感器数据
-        :param temp: 温度
-        :param humid: 湿度
-        :param light: 光照
+        :param data: 传感器数据
         :return: NULL
         """
-        self.temp = temp
-        self.humid = humid
-        self.light = light
-        self.last_update = time.time()
+        self.__temp = data["temp"]
+        self.__humid = data['humid']
+        self.__light = data['light']
+        self.__update_time = time.time()
 
     def get_temp(self):
-        return self.temp
+        return self.__temp
 
     def get_humid(self):
-        return self.humid
+        return self.__humid
 
     def get_light(self):
-        return self.light
+        return self.__light
 
-    def get_last_update(self):
-        return self.last_update
+    def get_update_time(self):
+        return self.__update_time
