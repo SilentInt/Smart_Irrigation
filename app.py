@@ -1,4 +1,7 @@
 from flask import Flask, render_template, request
+
+import EnvSensor
+import HumidSensor
 from Collector import Collector
 
 app = Flask(__name__)
@@ -58,21 +61,23 @@ def data_collect():
     if request.method == 'POST':
         col = Collector()
         col.update(request.json)
-        env = col.get_env()
-        humid = col.get_humid()
+        env = col.env_sensors
+        humid = col.humid_sensors
         for k, v in env.items():
             print(k)
-            print(v.get_temp())
-            print(v.get_humid())
-            print(v.get_light())
-            print(v.get_update_time())
+            if isinstance(v, EnvSensor.EnvSensor):
+                print(v.temp)
+                print(v.humid)
+                print(v.light)
+                print(v.update_time)
             print('')
         print('##########')
         for k, v in humid.items():
             print(k)
-            print(v.get_humid())
-            print(v.get_update_time())
-            print(v.get_name())
+            if isinstance(v, HumidSensor.HumidSensor):
+                print(v.humid)
+                print(v.update_time)
+                print(v.exname)
             print('')
         return 'Submitted'
 
