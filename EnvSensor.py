@@ -4,11 +4,15 @@ import time
 
 class EnvSensor(object):
 
-    def __init__(self):
+    def __init__(self, mac: str):
         self.__light = None
         self.__humid = None
         self.__temp = None
         self.__update_time = None
+        self.__mac = None
+
+    def get_mac(self):
+        return self.__mac
 
     def update(self, data: json):
         """

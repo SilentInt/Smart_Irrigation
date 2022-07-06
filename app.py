@@ -27,16 +27,16 @@ data_recv = {
 
 data_send = {
     "1": {
-        "last_time": 20
+        "amount": 20
     },
     "2": {
-        "last_time": 21
+        "amount": 21
     },
     "3": {
-        "last_time": 22
+        "amount": 22
     },
     "4": {
-        "last_time": 23
+        "amount": 23
     }
 }
 

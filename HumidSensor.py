@@ -1,6 +1,8 @@
 import json
 import time
 
+from Irrigator import Irrigator
+
 
 class HumidSensor(object):
     """
@@ -35,3 +37,9 @@ class HumidSensor(object):
 
     def get_update_time(self):
         return self.__update_time
+
+    def set_irrigator(self, irr: Irrigator):
+        self.__irrigator = irr
+
+    def get_irrigator(self):
+        return self.__irrigator
