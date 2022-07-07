@@ -6,12 +6,15 @@ from Irrigator import Irrigator
 
 class Collector(object):
     __instance = None
+    __first_init = True
 
     def __init__(self):
-        self.__env_sensors = dict()
-        self.__humid_sensors = dict()
-        self.__irrigator = dict()
-        self.__irrigation_task_queue = []
+        if self.__first_init:
+            self.__env_sensors = dict()
+            self.__humid_sensors = dict()
+            self.__irrigators = dict()
+            self.__irrigation_tasks = {}
+            self.__first_init = False
 
     def __new__(cls, *args, **kwargs):
         """单例模式"""
@@ -32,9 +35,9 @@ class Collector(object):
                 self.__humid_sensors[humid_sensor_mac] = humid_obj
         for irr_port in data['irrigator']:
             name = data['mac'] + ':' + str(irr_port)
-            if name not in self.__irrigator:
+            if name not in self.__irrigators:
                 irr_obj = Irrigator(data['mac'], irr_port)
-                self.__irrigator[name] = irr_obj
+                self.__irrigators[name] = irr_obj
 
     @property
     def env_sensors(self):
@@ -44,19 +47,34 @@ class Collector(object):
     def humid_sensors(self):
         return self.__humid_sensors
 
-    def enqueue(self, port: Irrigator):
-        self.__irrigation_task_queue.append(port)
+    @property
+    def irrigators(self):
+        return self.__irrigators
 
-    def commit(self):
-        task_data = dict()
-        for irr_task in self.__irrigation_task_queue:
-            if isinstance(irr_task, Irrigator):
-                task_mac = irr_task.mac
-                task_port = irr_task.port
-                task_amount = irr_task.irrigation_amount
-                task = {
-                    task_port: {
-                        "amount": task_amount
+    def add_task(self, port: Irrigator):
+        if port.mac not in self.__irrigation_tasks:
+            print("Creating task List")
+            self.__irrigation_tasks[port.mac] = []
+        if port in self.__irrigation_tasks[port.mac]:
+            print("Task exists. The former is reordered", port)
+            self.__irrigation_tasks[port.mac].remove(port)
+        print("Add task to List", port)
+        self.__irrigation_tasks[port.mac].append(port)
+
+    def get_task(self, mac: str):
+        print("All tasks", self.__irrigation_tasks)
+        if mac in self.__irrigation_tasks:
+            irr_task = self.__irrigation_tasks[mac]
+            print('Task list for ', mac, irr_task)
+            if irr_task:
+                per_task = irr_task.pop(0)
+                if isinstance(per_task, Irrigator):
+                    per_task.irrigate()
+                    task_port = per_task.port
+                    task_amount = per_task.irrigation_amount
+                    task = {
+                        task_port: {
+                            "amount": task_amount
+                        }
                     }
-                }
-                task_data[task_mac] = task
+                    return task

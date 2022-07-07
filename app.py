@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, jsonify
 
 import EnvSensor
 import HumidSensor
@@ -56,30 +56,42 @@ def index():
 #         print(request.form['value'])
 #     return 'Submitted'
 
-@app.route('/api/data', methods=['GET', 'POST'])
+@app.route('/api/data', methods=['POST'])
 def data_collect():
     if request.method == 'POST':
         col = Collector()
         col.update(request.json)
-        env = col.env_sensors
-        humid = col.humid_sensors
-        for k, v in env.items():
-            print(k)
-            if isinstance(v, EnvSensor.EnvSensor):
-                print(v.temp)
-                print(v.humid)
-                print(v.light)
-                print(v.update_time)
-            print('')
-        print('##########')
-        for k, v in humid.items():
-            print(k)
-            if isinstance(v, HumidSensor.HumidSensor):
-                print(v.humid)
-                print(v.update_time)
-                print(v.exname)
-            print('')
+        # env = col.env_sensors
+        # humid = col.humid_sensors
+        # for k, v in env.items():
+        #     print(k)
+        #     if isinstance(v, EnvSensor.EnvSensor):
+        #         print(v.temp)
+        #         print(v.humid)
+        #         print(v.light)
+        #         print(v.update_time)
+        #     print('')
+        # print('##########')
+        # for k, v in humid.items():
+        #     print(k)
+        #     if isinstance(v, HumidSensor.HumidSensor):
+        #         print(v.humid)
+        #         print(v.update_time)
+        #         print(v.exname)
+        #     print('')
+        irrigators = col.irrigators
+        for irr_obj in irrigators.values():
+            col.add_task(irr_obj)
         return 'Submitted'
+
+
+@app.route('/api/task', methods=['POST'])
+def get_task():
+    col = Collector()
+    print('Receive task request from',request.json['mac'])
+    tasks = col.get_task(request.json['mac'])
+    print("data to response",tasks)
+    return jsonify(tasks)
 
 
 if __name__ == '__main__':
