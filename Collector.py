@@ -72,9 +72,10 @@ class Collector(object):
                     per_task.irrigate()
                     task_port = per_task.port
                     task_amount = per_task.irrigation_amount
-                    task = {
-                        task_port: {
+                    task = [
+                        {
+                            "port": task_port,
                             "amount": task_amount
                         }
-                    }
+                    ]
                     return task
