@@ -25,7 +25,7 @@ data_recv = {
             "humid": 23.3
         }
     },
-    "irrigator": [1, 2, 3, 4]
+    "irrigator": 1
 }
 
 data_send = {
@@ -70,14 +70,16 @@ def data_collect():
 @app.route('/api/task', methods=['POST'])
 def get_task():
     col = Collector()
-    print('Receive task request from',request.json['mac'])
+    print('Receive task request from', request.json['mac'])
     tasks = col.get_task(request.json['mac'])
-    print("data to response",tasks)
+    print("data to response", tasks)
     return jsonify(tasks)
 
-@app.route('/api/bind',methods=["POST"])
+
+@app.route('/api/bind', methods=["POST"])
 def bind_sensors():
     pass
+
 
 if __name__ == '__main__':
     app.run(debug=True)
