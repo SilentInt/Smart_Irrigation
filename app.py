@@ -61,24 +61,6 @@ def data_collect():
     if request.method == 'POST':
         col = Collector()
         col.update(request.json)
-        # env = col.env_sensors
-        # humid = col.humid_sensors
-        # for k, v in env.items():
-        #     print(k)
-        #     if isinstance(v, EnvSensor.EnvSensor):
-        #         print(v.temp)
-        #         print(v.humid)
-        #         print(v.light)
-        #         print(v.update_time)
-        #     print('')
-        # print('##########')
-        # for k, v in humid.items():
-        #     print(k)
-        #     if isinstance(v, HumidSensor.HumidSensor):
-        #         print(v.humid)
-        #         print(v.update_time)
-        #         print(v.exname)
-        #     print('')
         irrigators = col.irrigators
         for irr_obj in irrigators.values():
             col.add_task(irr_obj)
@@ -93,6 +75,9 @@ def get_task():
     print("data to response",tasks)
     return jsonify(tasks)
 
+@app.route('/api/bind',methods=["POST"])
+def bind_sensors():
+    pass
 
 if __name__ == '__main__':
     app.run(debug=True)
