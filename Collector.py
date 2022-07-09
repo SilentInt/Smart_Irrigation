@@ -33,7 +33,7 @@ class Collector(object):
                 humid_obj = HumidSensor(humid_sensor_mac, humid_sensor_mac)
                 humid_obj.update(humid_sensor_value)
                 self.__humid_sensors[humid_sensor_mac] = humid_obj
-        for irr_port in range(int(data['irrigator'])):
+        for irr_port in range(0, int(data['irrigator']) + 1):
             name = data['mac'] + ':' + str(irr_port)
             if name not in self.__irrigators:
                 irr_obj = Irrigator(data['mac'], irr_port)
