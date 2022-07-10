@@ -25,21 +25,21 @@ data_recv = {
             "humid": 23.3
         }
     },
-    "irrigator": 1
+    "irrigator": 3
 }
 
-data_send = {
-    "1": {
-        "amount": 20
-    },
-    "2": {
-        "amount": 21
-    },
-    "3": {
-        "amount": 22
-    },
-    "4": {
-        "amount": 23
+data_send = [
+    {
+        "port": '1',
+        "amount": 100
+    }
+]
+request_json = {"mac": "ff:ff:ff:ff:ff:11"}
+
+bind = {
+    "11:11:11:11:11:11": {
+        'mac': "fsdfasdf",
+        'port': 3
     }
 }
 

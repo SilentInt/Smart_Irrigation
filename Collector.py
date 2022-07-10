@@ -13,7 +13,7 @@ class Collector(object):
             self.__env_sensors = dict()
             self.__humid_sensors = dict()
             self.__irrigators = dict()
-            self.__irrigation_tasks = {}
+            self.__irrigation_tasks = dict()
             self.__first_init = False
 
     def __new__(cls, *args, **kwargs):
@@ -33,6 +33,8 @@ class Collector(object):
                 humid_obj = HumidSensor(humid_sensor_mac, humid_sensor_mac)
                 humid_obj.update(humid_sensor_value)
                 self.__humid_sensors[humid_sensor_mac] = humid_obj
+            else:
+                self.__humid_sensors[humid_sensor_mac].update(humid_sensor_value)
         for irr_port in range(1, int(data['irrigator']) + 1):
             name = data['mac'] + ':' + str(irr_port)
             if name not in self.__irrigators:
